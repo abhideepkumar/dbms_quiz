@@ -1,0 +1,37 @@
+[
+    {
+        "quizID": "Q123456789012345",
+        "teacherID": "T123456789012345",
+        "title": "Quiz 1",
+        "description": "Quiz 1 description",
+        "date_created": "2022-01-01"
+    },
+    {
+        "quizID": "Q223456789012345",
+        "teacherID": "T223456789012345",
+        "title": "Quiz 2",
+        "description": "Quiz 2 description",
+        "date_created": "2022-01-02"
+    },
+    {
+        "quizID": "Q323456789012345",
+        "teacherID": "T323456789012345",
+        "title": "Quiz 3",
+        "description": "Quiz 3 description",
+        "date_created": "2022-01-03"
+    },
+    {
+        "quizID": "Q423456789012345",
+        "teacherID": "T423456789012345",
+        "title": "Quiz 4",
+        "description": "Quiz 4 description",
+        "date_created": "2022-01-04"
+    },
+    {
+        "quizID": "Q523456789012345",
+        "teacherID": "T523456789012345",
+        "title": "Quiz 5",
+        "description": "Quiz 5 description",
+        "date_created": "2022-01-05"
+    }
+    ]
