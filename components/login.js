@@ -14,10 +14,10 @@ import { Chrome } from 'lucide-react';
 
 const Login = () => {
     return (
-        <div className="flex justify-center p-5 flex-col bg-slate-300 m-10 rounded-md">
+        <div className="flex p-5 flex-col bg-slate-300 m-10 rounded-md items-center">
             <h1 className="text-center p-5 ">It seems like, you have not logged in yet, please login to continue.</h1>
             <AlertDialog>
-                <AlertDialogTrigger>
+                <AlertDialogTrigger asChild>
                     <Button>
                         <Chrome className="mr-2 h-4 w-4" /> Login using email
                     </Button>

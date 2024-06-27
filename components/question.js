@@ -4,9 +4,11 @@ import sampleQuestions from '@/app/data/question_set';
 import { Button } from './ui/button';
 import SkeletonPlate from './skeleton';
 import { handleOptionSelect } from '@/app/actions';
-import { useRouter } from 'next/navigation';
+import {onQuizComplete} from '@/app/actions';
+import { useRouter,useParams} from 'next/navigation';
 
 const Question = () => {
+    const {quiz_id} = useParams();
     const router = useRouter();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOptionID, setSelectedOptionID] = useState(null);
@@ -54,7 +56,7 @@ const Question = () => {
         localStorage.clear();
         setCurrentQuestionIndex(0);
         setSelectedOptionID(null);
-        router.push('/')
+        router.push(`/${quiz_id}/result`);
         // Handle form submission
     };
 
@@ -92,7 +94,7 @@ const Question = () => {
                    {!(currentQuestionIndex === sampleQuestions.length - 1)&&( <Button variant="ghost" className="p-5 flex items-center" onClick={handleNext} >
                         <p>Next</p>
                     </Button>)}
-                    {(currentQuestionIndex === sampleQuestions.length - 1)&&( <Button variant="outline" className="p-5 flex items-center" onClick={handleSubmit} >
+                    {(currentQuestionIndex === sampleQuestions.length - 1)&&( <Button variant="outline" className="p-5 flex items-center" onClick={onQuizComplete(quiz_id)} >
                         <p>Submit</p>
                     </Button>)}
                 </div>
