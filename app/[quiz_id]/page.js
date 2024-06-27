@@ -21,7 +21,7 @@ const Quiz = ({ params }) => {
             Quiz ID: {params.quiz_id}
             <div className='p-5'>
                 <Question />
-                <Timer time={5} onComplete={() => onQuizComplete(params.quiz_id)}/>
+                <Timer time={5*60} />
             </div>
         </div>
     );

@@ -1,3 +1,4 @@
+'use client';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,6 +12,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from './ui/button';
 import { Chrome } from 'lucide-react';
+import { signIn } from 'next-auth/react';
 
 const Login = () => {
     return (
@@ -31,7 +33,7 @@ const Login = () => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction>Continue to login</AlertDialogAction>
+                        <AlertDialogAction onClick={() => signIn('google')}>Continue to login</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

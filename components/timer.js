@@ -2,16 +2,20 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { onQuizComplete } from '@/app/actions';
+import { useParams } from 'next/navigation';
 
 
-const Timer = ({ time, onComplete }) => {
-  const [timeLeft, setTimeLeft] = useState(time*60);
+const Timer = ({ time }) => {
+  const [timeLeft, setTimeLeft] = useState(time);
   const [progress, setProgress] = useState(100);
+
+  const {quiz_id} = useParams();
 
   useEffect(() => {
     if (timeLeft <= 0) {
         console.log("Timer completed");
-        onComplete();
+        onQuizComplete(quiz_id);
       return;
     }
 
@@ -24,7 +28,7 @@ const Timer = ({ time, onComplete }) => {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [timeLeft, time, onComplete]);
+  }, [timeLeft, time]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);

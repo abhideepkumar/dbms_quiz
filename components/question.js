@@ -24,7 +24,7 @@ const Question = () => {
                 setSelectedOptionID(savedOptionID);
             }
         }
-    }, [currentQuestionIndex]);
+    }, [currentQuestion.questionID]);
 
     const handleChoose = (optionID, correct, questionID) => {
         handleOptionSelect(optionID, correct, questionID)
