@@ -1,6 +1,6 @@
 'use server';
 import { redirect} from 'next/navigation';
-import { pool } from '@/lib/db';
+import  pool  from '@/lib/db';
 
 
 
