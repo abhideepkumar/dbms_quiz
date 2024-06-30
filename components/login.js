@@ -13,9 +13,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from './ui/button';
 import { LogIn, AlertCircle, MailPlus } from 'lucide-react';
-import { signIn } from 'next-auth/react';
-import Image from 'next/image';
-import { handleSignin } from '@/app/actions'; // Ensure this is the correct import
+import { handleSignin } from '@/app/actions';
 
 const Login = ({ target }) => {
 
@@ -50,7 +48,7 @@ const Login = ({ target }) => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={()=>handleSignin("google",target)}>Continue to Login</AlertDialogAction>
+                                <AlertDialogAction onClick={()=>handleSignin()}>Continue to Login</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>

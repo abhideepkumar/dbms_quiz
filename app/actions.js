@@ -1,8 +1,17 @@
 'use server';
-import { redirect} from 'next/navigation';
-import  pool  from '@/lib/db';
+import { redirect } from 'next/navigation';
+import pool from '@/lib/db';
+import { signIn, signOut, auth } from '@/auth';
 
-
+export async function handleSignin() {
+    console.log('Signin initiated');
+    await signIn("google", {redirectTo:"/checkRole"});
+}
+export async function handleSignOut() {
+    console.log('Signout initiated');
+    await signOut();
+    redirect("/quiz-test")
+}
 
 const handleQuery = async (query, values = []) => {
     const client = await pool.connect();
@@ -41,8 +50,7 @@ function extractInfo(email) {
     };
 }
 
-export async function checkStudent(email)
-{
+export async function checkStudent(email) {
     try {
         // Construct the SQL query
         const query = `
@@ -70,8 +78,7 @@ export async function checkStudent(email)
     }
 }
 
-export async function createStudents(USN,email)
-{
+export async function createStudents(USN, email) {
     try {
         // Check if the student already exists
         const checkResult = await checkStudent(email);
@@ -94,7 +101,7 @@ export async function createStudents(USN,email)
             email,
             `${studentInfo.batchYear.split('-')[0]}-01-01`, // Assuming admissionyear starts from the batch year
             studentInfo.branch,
-            studentInfo.section
+            studentInfo.section,
         ];
 
         // Execute the query
@@ -106,7 +113,6 @@ export async function createStudents(USN,email)
         return { success: false, message: error.message };
     }
 }
-
 
 export async function checkTeacher(temail) {
     try {
@@ -136,7 +142,6 @@ export async function checkTeacher(temail) {
     }
 }
 
-
 export async function createTeacher(tname, temail) {
     try {
         // Check if the teacher already exists
@@ -157,7 +162,7 @@ export async function createTeacher(tname, temail) {
 
         // Execute the query
         const result = await handleQuery(query, values);
-        
+
         const teacherId = result.rows[0].teacherid;
 
         return { success: true, message: 'Teacher created successfully', teacherId: teacherId };
@@ -166,10 +171,6 @@ export async function createTeacher(tname, temail) {
         return { success: false, message: error.message };
     }
 }
-
-
-
-
 
 export async function handleOptionSelect(optionID, correct, questionID) {
     console.log(`Selected option ID: ${optionID}`);

@@ -4,7 +4,7 @@ import React from 'react'
 const TeacherPage = ({params}) => {
   return (
    <div>
-    <Login target={"teachers"}/>
+    <Login target={"Teacher"}/>
    </div>
   )
 }
