@@ -1,20 +1,9 @@
 'use server';
-import { redirect } from 'next/navigation';
-import pool from '@/lib/db';
-import { signIn, signOut, auth } from '@/auth';
+import { redirect} from 'next/navigation';
+import  pool  from '@/lib/db';
 
-export async function handleSignin(provider) {
-    console.log('Signin initiated');
-    target == 'Student' ? await signIn(provider) : await signIn(provider);
-    const session = await auth();
-    console.log('Console from homepage: ', session);
-    redirect(`/faculty/${session.user.email}`);
-}
-export async function handleSignOut() {
-    console.log('Signout initiated');
-    await signOut();
-    console.log('Signout completed');
-}
+
+
 const handleQuery = async (query, values = []) => {
     const client = await pool.connect();
     try {
@@ -51,6 +40,136 @@ function extractInfo(email) {
         section: section.toUpperCase(),
     };
 }
+
+export async function checkStudent(email)
+{
+    try {
+        // Construct the SQL query
+        const query = `
+            SELECT COUNT(*) AS count
+            FROM public.students
+            WHERE email = $1
+        `;
+
+        // Prepare the values
+        const values = [email];
+
+        // Execute the query
+        const result = await handleQuery(query, values);
+
+        // Check if the student exists
+        const count = parseInt(result.rows[0].count, 10);
+        if (count > 0) {
+            return { exists: true, message: 'Student already exists' };
+        } else {
+            return { exists: false, message: 'Student does not exist' };
+        }
+    } catch (error) {
+        console.error('Error checking student:', error);
+        return { exists: false, message: error.message };
+    }
+}
+
+export async function createStudents(USN,email)
+{
+    try {
+        // Check if the student already exists
+        const checkResult = await checkStudent(email);
+        if (checkResult.exists) {
+            return { success: false, message: 'Student already exists' };
+        }
+
+        const studentInfo = extractInfo(email);
+
+        // Construct the SQL query
+        const query = `
+            INSERT INTO public.students (usn, name, email, admissionyear, branch, section)
+            VALUES ($1, $2, $3, $4, $5, $6)
+        `;
+
+        // Prepare the values
+        const values = [
+            USN,
+            studentInfo.name,
+            email,
+            `${studentInfo.batchYear.split('-')[0]}-01-01`, // Assuming admissionyear starts from the batch year
+            studentInfo.branch,
+            studentInfo.section
+        ];
+
+        // Execute the query
+        await handleQuery(query, values);
+
+        return { success: true, message: 'Student created successfully' };
+    } catch (error) {
+        console.error('Error creating student:', error);
+        return { success: false, message: error.message };
+    }
+}
+
+
+export async function checkTeacher(temail) {
+    try {
+        // Construct the SQL query
+        const query = `
+            SELECT COUNT(*) AS count
+            FROM public.teachers
+            WHERE temail = $1
+        `;
+
+        // Prepare the values
+        const values = [temail];
+
+        // Execute the query
+        const result = await handleQuery(query, values);
+
+        // Check if the teacher exists
+        const count = parseInt(result.rows[0].count, 10);
+        if (count > 0) {
+            return { exists: true, message: 'Teacher already exists' };
+        } else {
+            return { exists: false, message: 'Teacher does not exist' };
+        }
+    } catch (error) {
+        console.error('Error checking teacher:', error);
+        return { exists: false, message: error.message };
+    }
+}
+
+
+export async function createTeacher(tname, temail) {
+    try {
+        // Check if the teacher already exists
+        const checkResult = await checkTeacher(temail);
+        if (checkResult.exists) {
+            return { success: false, message: 'Teacher already exists' };
+        }
+
+        // Construct the SQL query
+        const query = `
+            INSERT INTO public.teachers (tname, temail)
+            VALUES ($1, $2)
+            RETURNING teacherid
+        `;
+
+        // Prepare the values
+        const values = [tname, temail];
+
+        // Execute the query
+        const result = await handleQuery(query, values);
+        
+        const teacherId = result.rows[0].teacherid;
+
+        return { success: true, message: 'Teacher created successfully', teacherId: teacherId };
+    } catch (error) {
+        console.error('Error creating teacher:', error);
+        return { success: false, message: error.message };
+    }
+}
+
+
+
+
 
 export async function handleOptionSelect(optionID, correct, questionID) {
     console.log(`Selected option ID: ${optionID}`);
