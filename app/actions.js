@@ -5,12 +5,12 @@ import { signIn, signOut, auth } from '@/auth';
 
 export async function handleSignin() {
     console.log('Signin initiated');
-    await signIn("google", {redirectTo:"/checkRole"});
+    await signIn('google', { redirectTo: '/' });
 }
 export async function handleSignOut() {
     console.log('Signout initiated');
     await signOut();
-    redirect("/quiz-test")
+    redirect('/');
 }
 
 const handleQuery = async (query, values = []) => {
@@ -26,7 +26,7 @@ const handleQuery = async (query, values = []) => {
     }
 };
 //scraping data from email
-function extractInfo(email) {
+export async function extractInfo(email) {
     const emailRegex = /^(?<year>\d{4})(?<branchCode>[a-z]{2})_(?<name>[^_]+)_(?<section>[a-z])@/i;
     const branchMap = {
         is: 'ISE',
@@ -49,7 +49,26 @@ function extractInfo(email) {
         section: section.toUpperCase(),
     };
 }
+export async function processCSV(formData) {
+    'use server'
+  
+    const file = formData.get('csvFile');
+    const time = formData.get('timeInput');
 
+    console.log('Processing CSV file:', file.name);
+    console.log('Time input:', time);
+  
+    // server-side logic here
+    return { success: true, message: 'CSV processed successfully' };
+  }
+export async function determineEmailRole(email) {
+    try {
+        const studentInfo = extractInfo(email);
+        return { role: 'student', info: studentInfo };
+    } catch (error) {
+        return { role: 'teacher' };
+    }
+}
 export async function checkStudent(email) {
     try {
         // Construct the SQL query

@@ -5,28 +5,24 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from './ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Mail, GraduationCap, Users, Calendar } from 'lucide-react';
+import { Mail, GraduationCap, Users } from 'lucide-react';
 import { handleSignOut } from '@/app/actions';
-import { redirect } from 'next/navigation';
+import QuizUpload from './addQuizBox';
 
-const extractInfo = (email) => {
-    const match = email.match(/^(\d{4})([a-z]{2})_[^_]+_([a-z])@/i);
+const extractTeacherInfo = (email) => {
+    const match = email.match(/^([a-z]+)@nie\.ac\.in$/i);
     if (!match) {
-        redirect(`/faculty/${email}`);
+        throw new Error('Invalid email format for teacher');
     }
 
-    const [, year, branchCode, section] = match;
-    const branchMap = { is: 'ISE', cs: 'CSE', ci: 'AI/ML' };
-
+    const [, name] = match;
     return {
-        branch: branchMap[branchCode] || 'Unknown',
-        batchYear: `${year}-${parseInt(year) + 4}`,
-        section: section.toUpperCase(),
+        name: name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),
     };
 };
 
-const UserProfile = ({ user }) => {
-    const { branch, batchYear, section } = extractInfo('nandinibm@nie.ac.in');
+const TeacherProfile = ({ user }) => {
+    const { name } = extractTeacherInfo(user.email);
 
     return (
         <div className="flex items-center justify-center p-4">
@@ -34,23 +30,23 @@ const UserProfile = ({ user }) => {
                 <div className="flex flex-col sm:flex-row sm:items-stretch">
                     <CardHeader className="sm:w-1/3 p-4 flex flex-col items-center justify-center space-y-2">
                         <Avatar className="w-20 h-20 border-2">
-                            <AvatarImage src={user.image} alt={user.name} />
-                            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                            <AvatarImage src={user.image} alt={name} />
+                            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
                         </Avatar>
-                        <h2 className="text-xl font-bold text-center">{user.name}</h2>
-                        <p className="text-sm text-center">{branch} Student</p>
+                        <h2 className="text-xl font-bold text-center">{name}</h2>
+                        <p className="text-sm text-center">Faculty Member</p>
                         <Badge variant="secondary" className="text-primary">
-                            {batchYear} Batch
+                            Teacher
                         </Badge>
                     </CardHeader>
                     <Separator className="sm:hidden my-2" />
                     <div className="hidden sm:block w-px bg-gray-200 mx-2" />
                     <CardContent className="sm:w-2/3 p-4 space-y-4 flex flex-col justify-center">
                         <InfoItem icon={<Mail className="w-4 h-4" />} text={user.email} />
-                        <InfoItem icon={<GraduationCap className="w-4 h-4" />} text={branch} />
-                        <InfoItem icon={<Users className="w-4 h-4" />} text={`Section ${section}`} />
-                        <InfoItem icon={<Calendar className="w-4 h-4" />} text={`${batchYear} Batch`} />
-                        <div className="flex justify-end mt-4">
+                        <InfoItem icon={<GraduationCap className="w-4 h-4" />} text="NIE Faculty" />
+                        <InfoItem icon={<Users className="w-4 h-4" />} text="Department" />
+                        <div className="flex justify-end mt-4 space-x-2">
+                            <QuizUpload />
                             <Button variant="destructive" onClick={() => handleSignOut()}>
                                 Sign Out
                             </Button>
@@ -69,4 +65,4 @@ const InfoItem = ({ icon, text }) => (
     </div>
 );
 
-export default UserProfile;
+export default TeacherProfile;
