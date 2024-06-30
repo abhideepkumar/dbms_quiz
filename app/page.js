@@ -6,8 +6,8 @@ export default async function Home() {
     console.log("Console from homepage: ",session)
     return (
         <main>
-            {!session.user && (<Login />)}
-            {session.user && (<UserProfile user={session.user}/>)}
+            {!session && (<Login target={"Student"}/>)}
+            {session && (<UserProfile user={session.user}/>)}
         </main>
     );
 }

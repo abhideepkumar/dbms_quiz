@@ -1,9 +1,20 @@
 'use server';
-import { redirect} from 'next/navigation';
-import  pool  from '@/lib/db';
+import { redirect } from 'next/navigation';
+import pool from '@/lib/db';
+import { signIn, signOut, auth } from '@/auth';
 
-
-
+export async function handleSignin(provider) {
+    console.log('Signin initiated');
+    target == 'Student' ? await signIn(provider) : await signIn(provider);
+    const session = await auth();
+    console.log('Console from homepage: ', session);
+    redirect(`/faculty/${session.user.email}`);
+}
+export async function handleSignOut() {
+    console.log('Signout initiated');
+    await signOut();
+    console.log('Signout completed');
+}
 const handleQuery = async (query, values = []) => {
     const client = await pool.connect();
     try {
