@@ -2,6 +2,7 @@ import Login from '@/components/login';
 import React from 'react';
 import { auth } from '@/auth';
 import TeacherProfile from '@/components/teacher-profile';
+import Link from 'next/link';
 
 const TeacherPage = async ({ params }) => {
     const session = await auth();
@@ -20,6 +21,9 @@ const TeacherPage = async ({ params }) => {
                     />
                 </div>
             )}
+            <Link href="/template.csv" download className="text-blue-600 underline flex justify-center">
+                Download CSV Template of Quiz
+            </Link>
         </main>
     );
 };
