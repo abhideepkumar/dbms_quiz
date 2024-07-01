@@ -12,7 +12,7 @@ import QuizUpload from './addQuizBox';
 const extractTeacherInfo = (email) => {
     const match = email.match(/^([a-z]+)@nie\.ac\.in$/i);
     if (!match) {
-        throw new Error('Invalid email format for teacher');
+        console.log("Invalid email format of teacher");
     }
 
     const [, name] = match;

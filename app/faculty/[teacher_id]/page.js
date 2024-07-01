@@ -13,11 +13,7 @@ const TeacherPage = async ({ params }) => {
             {session && (
                 <div>
                     <TeacherProfile
-                        user={{
-                            name: 'ABHIDEEP KUMAR ISE22A',
-                            email: 'nandinibm@nie.ac.in',
-                            image: 'https://lh3.googleusercontent.com/a/ACg8ocIMmbcyIcuijK5KUwsh4tW0pWRC2aZCMZdEelTy2aKesji7qw=s96-c',
-                        }}
+                        user={session?.user}
                     />
                 </div>
             )}

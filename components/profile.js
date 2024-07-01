@@ -1,17 +1,18 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from './ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Mail, GraduationCap, Users, Calendar } from 'lucide-react';
-import { handleSignOut } from '@/app/actions';
+import { handleSignOut, checkNewStudent, addNewStudent } from '@/app/actions';
 import { redirect } from 'next/navigation';
 
 const extractInfo = (email) => {
     const match = email.match(/^(\d{4})([a-z]{2})_[^_]+_([a-z])@/i);
     if (!match) {
+        console.log('Invalid email format');
         redirect(`/faculty/${email}`);
     }
 
@@ -26,7 +27,29 @@ const extractInfo = (email) => {
 };
 
 const UserProfile = ({ user }) => {
-    const { branch, batchYear, section } = extractInfo('nandinibm@nie.ac.in');
+    const { branch, batchYear, section } = extractInfo(user.email);
+
+    useEffect(() => {
+        const checkAndAddStudent = async () => {
+            if (!user || !user.email) {
+                throw new Error('User sign-in failed or email not available');
+            }
+
+            const email = user.email;
+
+            try {
+                const isNewStudent = await checkNewStudent(email);
+                console.log("isNewStudent", isNewStudent);
+                if (!isNewStudent) {
+                    await addNewStudent(email);
+                }
+            } catch (error) {
+                console.error('Error checking or adding new student:', error);
+            }
+        };
+
+        checkAndAddStudent();
+    }, [user]);
 
     return (
         <div className="flex items-center justify-center p-4">
