@@ -83,3 +83,59 @@ export async function checkNewStudent(email) {
     console.log("After checking new student", result);
     return result.length > 0;
 }
+
+export async function isValidQuizId(quizId) {
+    console.log('Checking if quiz ID is valid:', quizId);
+    const query = `
+        SELECT quizid
+        FROM quiz
+        WHERE quizid = $1
+    `;
+    const values = [quizId];
+
+    const result = await handleQuery(query, values);
+    console.log("Checking if quiz ID is valid", result);
+    return result.length > 0;
+}
+
+export async function getQuizQuestions(quizId) {
+    console.log('Fetching questions for quiz ID:', quizId);
+    const query = `
+        SELECT q.questionid, q.questiontext, o.optionid, o.optiontext, o.points
+        FROM question q
+        JOIN option o ON q.questionid = o.questionid
+        WHERE q.quizid = $1
+    `;
+    const values = [quizId];
+
+    const results = await handleQuery(query, values);
+
+    // Organize questions and options into a structured format
+    const questions = {};
+    results.forEach(row => {
+        const { questionid, questiontext, optionid, optiontext, points } = row;
+
+        // Initialize the question object if not exists
+        if (!questions[questionid]) {
+            questions[questionid] = {
+                questionID: questionid,
+                quizID: quizId,
+                question: questiontext,
+                options: []
+            };
+        }
+
+        // Determine if the current option is correct by checking points
+        const isCorrect = points > 0;
+
+        // Add option to the options array
+        questions[questionid].options.push({
+            optionID: optionid,
+            optionText: optiontext,
+            correct: isCorrect
+        });
+    });
+
+    // Convert object to array format and return
+    return Object.values(questions);
+}

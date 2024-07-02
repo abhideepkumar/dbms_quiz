@@ -12,7 +12,7 @@ const IdleTimerDialog = () => {
     const handleVisibilityChange = () => {
         if (document.hidden) {
             setIsDialogOpen(true);
-            setTimeLeft(5);
+            setTimeLeft(500);
         }
     };
 

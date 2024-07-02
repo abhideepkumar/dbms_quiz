@@ -1,19 +1,21 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import sampleQuestions from '@/app/data/question_set';
+import questions from '@/app/data/question_set';
 import { Button } from './ui/button';
 import SkeletonPlate from './skeleton';
 import { handleOptionSelect } from '@/app/actions';
 import {onQuizComplete} from '@/app/actions';
 import { useRouter,useParams} from 'next/navigation';
 
-const Question = () => {
+const Question = ({questions}) => {
+    console.log("Response: ",questions)
+    console.log("Sample Questions: ",questions)
     const {quiz_id} = useParams();
     const router = useRouter();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOptionID, setSelectedOptionID] = useState(null);
 
-    const currentQuestion = sampleQuestions[currentQuestionIndex];
+    const currentQuestion = questions[currentQuestionIndex];
 
     useEffect(() => {
         // Reset the selected option when the question changes
@@ -41,7 +43,7 @@ const Question = () => {
     };
 
     const handleNext = () => {
-        if (currentQuestionIndex < sampleQuestions.length - 1) {
+        if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         }
     };
@@ -91,10 +93,10 @@ const Question = () => {
                     <Button variant="ghost" className="p-5 flex items-center" onClick={handlePrevious} disabled={currentQuestionIndex === 0}>
                         <p>Previous</p>
                     </Button>
-                   {!(currentQuestionIndex === sampleQuestions.length - 1)&&( <Button variant="ghost" className="p-5 flex items-center" onClick={handleNext} >
+                   {!(currentQuestionIndex === questions.length - 1)&&( <Button variant="ghost" className="p-5 flex items-center" onClick={handleNext} >
                         <p>Next</p>
                     </Button>)}
-                    {(currentQuestionIndex === sampleQuestions.length - 1)&&( <Button variant="outline" className="p-5 flex items-center" onClick={onQuizComplete(quiz_id)} >
+                    {(currentQuestionIndex === questions.length - 1)&&( <Button variant="outline" className="p-5 flex items-center" onClick={() => onQuizComplete(quiz_id)} >
                         <p>Submit</p>
                     </Button>)}
                 </div>
